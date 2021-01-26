@@ -1,7 +1,7 @@
 //! Generate C# classes from the given JSON
 // TODO: handle name collisions?
 use serde_json::{Value, Map};
-use std::fmt::{Write};
+use std::fmt::{Write, Error};
 use std::collections::VecDeque;
 use std::fmt;
 use clap::{Arg, App};
@@ -58,7 +58,7 @@ fn main() {
     let ast: Value = serde_json::from_str(&json).unwrap();
     
     let mut generator = ClassGenerator::new();
-    let out = generator.generate(&ast);
+    let out = generator.generate(&ast).expect("Failed to generate classes.");
     
     print!("{}", out);
 }
@@ -73,30 +73,30 @@ impl<'t> ClassGenerator<'t> {
         Self { todos: VecDeque::new() }
     }
     
-    fn generate(&mut self, ast: &'t Value) -> String {
+    fn generate(&mut self, ast: &'t Value) -> Result<String, Error> {
         let mut out = String::new();
-        let root = ast.as_object().unwrap();
+        let root = ast.as_object().ok_or(fmt::Error)?;
         
-        writeln!(&mut out, "public class Root\n{{").unwrap();
-        self.generate_class(root, &mut out);
-        writeln!(&mut out, "}}").unwrap();
+        writeln!(&mut out, "public class Root\n{{")?;
+        self.generate_class(root, &mut out)?;
+        writeln!(&mut out, "}}")?;
         
         while let Some((class, ast)) = self.todos.pop_front() {
-            writeln!(&mut out, "\npublic class {}\n{{", class).unwrap();
-            self.generate_class(ast, &mut out);
-            writeln!(&mut out, "}}").unwrap();
+            writeln!(&mut out, "\npublic class {}\n{{", class)?;
+            self.generate_class(ast, &mut out)?;
+            writeln!(&mut out, "}}")?;
         }
         
-        // print!("{}", out);
-        out
+        Ok(out)
     }
     
-    fn generate_class(&mut self, root: &'t Map<String, Value>, out: &mut String) {
+    fn generate_class(&mut self, root: &'t Map<String, Value>, out: &mut String) -> Result<(), Error> {
         for entry in root {
             let classname = self.find_type(entry);
             let varname = entry.0.to_ascii_lowercase();
-            writeln!(out, "    public {} {} {{ get; set; }}", classname, varname).unwrap();
+            writeln!(out, "    public {} {} {{ get; set; }}", classname, varname)?;
         }
+        Ok(())
     }
     
     fn collapse_type(&mut self, entry: (&String, &'t Value)) -> String {
@@ -157,7 +157,7 @@ mod test {
             .unwrap();
         
         let mut generator = ClassGenerator::new();
-        let output = generator.generate(&ast);
+        let output = generator.generate(&ast).expect("Failed to generate classes.");
         
         let answer = fs::read_to_string(answer_path).unwrap();
         assert!(output.eq(&answer));
