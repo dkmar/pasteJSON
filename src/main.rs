@@ -1,6 +1,7 @@
 //! Generate C# classes from the given JSON
 //! Author: Daniel Mar
 //! TODO: handle name collisions?
+//! TODO: map Value::Null to Nullable<string>?
 
 /// General Strategy:
 /// 1. Use the serde crate to parse JSON into an abstract syntax tree
