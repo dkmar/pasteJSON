@@ -2,7 +2,7 @@
 
 Summary
 ---
-Emulates the `Paste JSON as Classes` feature of Visual Studio.
+I threw this utility together to emulate the `Paste JSON as Classes` feature of Visual Studio.
 
 Given either a file containing JSON or a JSON object on stdin, this program maps the JSON structure to C# classes and prints their class declarations.
 
