@@ -7,7 +7,7 @@ Emulates the `Paste JSON as Classes` feature of Visual Studio.
 Given either a file containing JSON or a JSON object on stdin, this program maps the JSON structure to C# classes and prints their class declarations.
 
 USAGE:
-    paste_json [file]
+    pasteJSON [file]
 
 FLAGS:
     -h, --help       Prints help information
@@ -18,9 +18,9 @@ ARGS:
 
 EXAMPLE USAGE:
 
-        (1)   paste_json weather.json
+        (1)   pasteJSON weather.json
         
-        (2)   cat weather.json | paste_json
+        (2)   cat weather.json | pasteJSON
         
 
 Example Results

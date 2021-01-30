@@ -2,6 +2,7 @@
 //! Author: Daniel Mar
 //! TODO: handle name collisions?
 //! TODO: map Value::Null to Nullable<string>?
+//! TODO: make plural singular when lifting a key to a class array? (eg. items => Item[])
 
 /// General Strategy:
 /// 1. Use the serde crate to parse JSON into an abstract syntax tree
@@ -56,14 +57,14 @@ impl CSharpType {
 
 fn main() {
     // CLI config
-    let matches = App::new("paste_json")
+    let matches = App::new("pasteJSON")
         .version("0.1")
         .author("Daniel M. <dmar@uw.edu>")
         .about("Generates C# classes to represent the given JSON.")
         .after_help(r#"EXAMPLES:
-        (1)   paste_json weather.json
+        (1)   pasteJSON weather.json
 
-        (2)   cat weather.json | paste_json"#)
+        (2)   cat weather.json | pasteJSON"#)
         .arg(Arg::with_name("file")
             .help("The file containing the JSON object")
             .required(false))

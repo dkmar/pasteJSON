@@ -1,5 +1,5 @@
 [package]
-name = "paste_json"
+name = "pasteJSON"
 version = "0.1.0"
 authors = ["Daniel Mar <daniel.k.mar@outlook.com>"]
 edition = "2018"
